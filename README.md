@@ -36,7 +36,7 @@ Programs and versions needed to run the pipeline are included in envonrment.yml 
 - BEASTgen xxx
 - BEAST v1.10.4
     - logcombiner v1.10.4
-- 
+- Snakemake v9.19.0
 
 # Process:
 1. Generate .XML files
@@ -44,11 +44,15 @@ Programs and versions needed to run the pipeline are included in envonrment.yml 
     To generate the trees, one must generate .xml files that runs in BEAST. 
     - Input: fasta file with aligned sequences
     - Output: .xml file instructing BEAST how to build trees from the sequences
-    **Assumptions: the fasta file is named [ID].fasta, and the headers in the fasta file contain sampling times in days since infection, in the fourth field separated by "_", e.g., >ID01_samp1_xx_1030_clone**
+    - **Assumptions: the fasta file is named [ID].fasta, and the headers in the fasta file contain sampling times in days since infection, in the fourth field separated by "_", e.g., >ID01_samp1_xx_1030_clone**
     
-    Run scipt "code/generate.sh", which takes the input fasta file, and creates a custom .xml for the analysis.
+    Run scipt "code/generate.sh" from the root directory, which takes the input fasta file, and creates a custom .xml for the analysis.
 
     ``code/generate.sh``
+
+2. Run BEAST
+
+
 
 
 
