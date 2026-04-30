@@ -1,0 +1,10 @@
+name: AbsDiv_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - beast=1.10.4
+  - snakemake
+  - graphviz
+prefix: /Users/lovisalindquist/miniconda3/envs/AbsDiv_env
