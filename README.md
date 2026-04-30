@@ -48,9 +48,14 @@ Programs and versions needed to run the pipeline are included in envonrment.yml 
     
     Run scipt "code/generate.sh" from the root directory, which takes the input fasta file, and creates a custom .xml for the analysis.
 
-    ``code/generate.sh``
+    `code/generate.sh`
 
 2. Run BEAST
+
+3. Run the post-run Snakemake pipeline
+
+    `snakemake -c 1 -p`
+
 
 
 
