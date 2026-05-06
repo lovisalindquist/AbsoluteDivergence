@@ -9,12 +9,9 @@ rule all:
     Collect the main outputs of the workflow.
     """
     input:
-        expand("results/BEAST/{sample}/DivergenceTables/{sample}_ES_div_all.txt", sample=config["samples"]),
-        expand("results/BEAST/{sample}/DivergenceTables/{sample}_EN_div_all.txt", sample=config["samples"]),
-        expand("results/BEAST/{sample}/DivergenceTables/{sample}_ES_div_int.txt", sample=config["samples"]),
-        expand("results/BEAST/{sample}/DivergenceTables/{sample}_EN_div_int.txt", sample=config["samples"]),
-        expand("results/BEAST/{sample}/RateFiles/{sample}_ES_rates.txt", sample=config["samples"]),
-        expand("results/BEAST/{sample}/RateFiles/{sample}_EN_rates.txt", sample=config["samples"])
+        expand("results/BEAST/{sample}/DivergenceTables/{sample}_{type}_div_{branch}.txt", sample=config["samples"], type=config["types"], branch=["all", "int"]),
+        
+        expand("results/BEAST/{sample}/RateFiles/{sample}_{type}_rates.txt", sample=config["samples"], type=config["types"])
 
 
 rule combine_trees:
@@ -39,17 +36,21 @@ rule extract_trees:
     """
     
     output: 
-        "results/BEAST/{sample}/ExtractedTrees/EN_trees.txt",
-        "results/BEAST/{sample}/ExtractedTrees/ES_trees.txt",
-        "results/BEAST/{sample}/ExtractedTrees/Time_trees.txt" 
+        N_file="results/BEAST/{sample}/ExtractedTrees/EN_trees.txt",
+        S_file="results/BEAST/{sample}/ExtractedTrees/ES_trees.txt",
+        T_file="results/BEAST/{sample}/ExtractedTrees/Time_trees.txt"
+
     input:
         "results/BEAST/{sample}/{sample}_AbsDiv_combinedTrees.trees"
+
     params:
         n=config["ntrees"]
     shell:
         """
         python code/TreeGenerator.py --input_trees {input} --n_trees {params.n}
-	mv *_trees.txt results/BEAST/{wildcards.sample}/ExtractedTrees/
+        mv EN_trees.txt {output.N_file}
+        mv ES_trees.txt {output.S_file}
+        mv Time_trees.txt {output.T_file}
         """
 
 rule analyse_rates:
@@ -58,41 +59,35 @@ rule analyse_rates:
     """
 
     output:
-        S_file="results/BEAST/{sample}/RateFiles/{sample}_ES_rates.txt",
-        N_file="results/BEAST/{sample}/RateFiles/{sample}_EN_rates.txt"
+        "results/BEAST/{sample}/RateFiles/{sample}_{type}_rates.txt",
+        
     input:
-        N_file="results/BEAST/{sample}/ExtractedTrees/EN_trees.txt",
-        S_file="results/BEAST/{sample}/ExtractedTrees/ES_trees.txt",
+        S_file="results/BEAST/{sample}/ExtractedTrees/{type}_trees.txt",
         T_file="results/BEAST/{sample}/ExtractedTrees/Time_trees.txt"
     shell:
         """
-        java -jar code/RateAnalyzer.jar {input.T_file} {input.S_file} > {output.S_file}
-        mv ./rates.txt results/BEAST/{wildcards.sample}/RateFiles/ES_rates.txt 
-        java -jar code/RateAnalyzer.jar {input.T_file} {input.N_file} > {output.N_file}
-        mv ./rates.txt results/BEAST/{wildcards.sample}/RateFiles/EN_rates.txt
+        java -jar code/RateAnalyzer.jar {input.T_file} {input.S_file} > {output}
+        
         rm ./ratesAnnotated.trees
+        rm ./rates.txt
         """
 
 rule extract_divergence:
     """
-    Combine the time trees with subst trees to get divergence at given times
+    Combine the time trees with subst. trees to get divergence at given times
     """
 
     output:
-        S_all="results/BEAST/{sample}/DivergenceTables/{sample}_ES_div_all.txt",
-        N_all="results/BEAST/{sample}/DivergenceTables/{sample}_EN_div_all.txt", 
-        S_int="results/BEAST/{sample}/DivergenceTables/{sample}_ES_div_int.txt", 
-        N_int="results/BEAST/{sample}/DivergenceTables/{sample}_EN_div_int.txt" 
+        "results/BEAST/{sample}/DivergenceTables/{sample}_{type}_div_all.txt", 
+        int_file="results/BEAST/{sample}/DivergenceTables/{sample}_{type}_div_int.txt"
     input:
-        N_file="results/BEAST/{sample}/ExtractedTrees/EN_trees.txt",
-        S_file="results/BEAST/{sample}/ExtractedTrees/ES_trees.txt",
+        S_file="results/BEAST/{sample}/ExtractedTrees/{type}_trees.txt",
         T_file="results/BEAST/{sample}/ExtractedTrees/Time_trees.txt"
     shell:
         """
-        java -jar code/BayesianDivergencePlotter.jar {input.T_file} {input.S_file} 0 all > {output.S_all}
-        java -jar code/BayesianDivergencePlotter.jar {input.T_file} {input.N_file} 0 all > {output.N_all}
-        java -jar code/BayesianDivergencePlotter.jar {input.T_file} {input.S_file} 0 int > {output.S_int}
-        java -jar code/BayesianDivergencePlotter.jar {input.T_file} {input.N_file} 0 int > {output.N_int}
+        java -jar code/BayesianDivergencePlotter.jar {input.T_file} {input.S_file} 0 all > {output.all_file}
+        java -jar code/BayesianDivergencePlotter.jar {input.T_file} {input.S_file} 0 int > {output.int_file}
+
         """    
 
 
