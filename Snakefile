@@ -78,7 +78,7 @@ rule extract_divergence:
     """
 
     output:
-        "results/BEAST/{sample}/DivergenceTables/{sample}_{type}_div_all.txt", 
+        all_file="results/BEAST/{sample}/DivergenceTables/{sample}_{type}_div_all.txt", 
         int_file="results/BEAST/{sample}/DivergenceTables/{sample}_{type}_div_int.txt"
     input:
         S_file="results/BEAST/{sample}/ExtractedTrees/{type}_trees.txt",
