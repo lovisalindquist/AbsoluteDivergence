@@ -29,6 +29,7 @@ AbsoluteDivergence/
         Fasta/
         XMLs/
     documentation/
+        PlotAbsoluteDivergence.qmd
     env/
         environment.yml
     results/
