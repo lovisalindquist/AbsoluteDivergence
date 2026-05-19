@@ -1,0 +1,121 @@
+---
+title: "PlotAbsoluteDivergence"
+author: "Lovisa Lindquist"
+format: html
+editor: visual
+---
+
+```{r}
+#| echo: false
+#| message: false
+
+# install and load packages
+library(tibble)
+library(stringr)
+library(readr)
+library(ggplot2)
+library(tidyverse)
+library(ggpubr)
+library(ggridges)
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+# set working directory
+setwd("directory/to/pipeline/root/")
+
+# read input files with divergence at given times
+rate_file_list = list.files("results/BEAST/", pattern = "*div_[allint]{3}.txt", recursive = T, full.names = T)
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+# set working directory
+setwd("directory/to/pipeline/root/")
+
+median_abs_data = tibble(ID = c(NA), Type=c(NA), Branches=c(NA), Median=c(NA))
+time_divergence_data = tibble(ID = c(NA), Type=c(NA), Branches=c(NA), Time=c(NA), Divergence=c(NA))
+
+# iterate through each file
+for (file in rate_file_list) {
+  # extract file name by last index
+  filename = str_split(file, "/")[[1]][length(str_split(file, "/")[[1]])]
+  
+  # extract ID, divergence type and branch set
+  ID = str_split(filename, "_")[[1]][1]
+  Type = str_split(filename, "_")[[1]][2]
+  Branches = gsub(".txt", "", str_split(filename, "_")[[1]][4])
+  
+  # extract median rates
+  if (Branches == "all") {
+    median = as.numeric(gsub(";", "", str_split(read_lines(file)[12], " ")[[1]][8]))
+  } else if (Branches == "int") {
+    median = as.numeric(gsub(";", "", str_split(read_lines(file)[14], " ")[[1]][8]))
+  }
+  median_abs_data = rbind(median_abs_data, c(ID, Type, Branches, median))
+  
+  # extract divergence per time estimates
+  for (i in 18:length(read_lines(file))) {
+    
+    currline = read_lines(file)[i]
+    time = as.numeric(str_split(currline, "\t")[[1]][1])
+    div = as.numeric(str_split(currline, "\t")[[1]][3])
+    time_divergence_data = rbind(time_divergence_data, c(ID, Type, Branches, time, div))
+  }
+}
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+# plot differences between internal and external branches for each type and participant
+median_abs_data %>% 
+  filter(is.na(ID)==F) %>% 
+  ggplot(aes(x = Type, y = as.numeric(Median), fill = Branches, group=interaction(Type, Branches))) + 
+  geom_violin() +
+  geom_boxplot(fill="white", alpha=0.5, position=position_dodge(width=0.9)) +
+  geom_point(position=position_dodge(width=0.9)) + 
+  theme_test() +
+  labs(x = "", y = "Median divergence rate (subst./site/time unit)") +
+  theme(text=element_text(face="bold", size=12))
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+# plot density plots of divergence rates for identification of groups/clusters
+median_abs_data %>% 
+  filter(is.na(ID)==F) %>% 
+  ggplot(aes(x = as.numeric(Median), y = Type, fill = Branches)) + 
+  geom_density_ridges(alpha=0.5) +
+  theme_test() +
+  labs(y = "", x = "Median divergence rate (subst./site/time unit)") +
+  theme(text=element_text(face="bold", size=12))
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+# plot trajectories of divergence over time for all and internal branches, EN and ES rates
+time_divergence_data %>% 
+  filter(is.na(ID)==F) %>% 
+  group_by(ID, Type, Branches) %>% 
+  mutate(RealTime = max(as.numeric(Time)) - as.numeric(Time)) %>% 
+  ggplot(aes(x=RealTime, y = as.numeric(Divergence), col=interaction(Branches, Type), group=interaction(Branches, Type))) + 
+  geom_line() +
+  facet_wrap(~ID, scales="free") +
+  theme_test()
+
+```
