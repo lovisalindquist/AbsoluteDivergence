@@ -24,20 +24,14 @@ library(ggridges)
 #| echo: false
 #| message: false
 
-# set working directory
-setwd("directory/to/pipeline/root/")
-
 # read input files with divergence at given times
-rate_file_list = list.files("results/BEAST/", pattern = "*div_[allint]{3}.txt", recursive = T, full.names = T)
+rate_file_list = list.files("../results/BEAST/", pattern = "*div_[allint]{3}.txt", recursive = T, full.names = T)
 
 ```
 
 ```{r}
 #| echo: false
 #| message: false
-
-# set working directory
-setwd("directory/to/pipeline/root/")
 
 median_abs_data = tibble(ID = c(NA), Type=c(NA), Branches=c(NA), Median=c(NA))
 time_divergence_data = tibble(ID = c(NA), Type=c(NA), Branches=c(NA), Time=c(NA), Divergence=c(NA))
