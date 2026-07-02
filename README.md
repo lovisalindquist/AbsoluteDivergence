@@ -18,6 +18,7 @@ AbsoluteDivergence/
     Snakefile
     config.yml
     bin/
+    	beastgen.jar
     code/
         BayesianDivergencePlotter.jar
         generate_xml.sh
@@ -38,11 +39,15 @@ AbsoluteDivergence/
 # Required software and packages:
 Programs and versions needed to run the pipeline are included in environment.yml (for AbsDiv_env)
 
-- BEASTGen v0.3 (not available in environment, available at the BEAST GitHub page)
-- BEAST v1.10.4
+- BEASTGen v0.3 (not available in environment, available at the BEAST GitHub page, must be in bin folder)
+- BEAST v1.10.4 (BEAST 10.5.0 not available in environment, available at the BEAST GitHub page, must be in bin folder)
     - logcombiner v1.10.4
 - Snakemake v9.19.0
-- r-base v
+- r-base
+- graphviz
+
+To activate environment:
+	`conda env create --file /env/environment.yml -n AbsDiv_env`
 
 # Process:
 1. Generate .XML files
@@ -57,16 +62,17 @@ Programs and versions needed to run the pipeline are included in environment.yml
     /data/XMLs/[file].AbsRate.xml
 
     - **Assumptions: the fasta file is named [ID].fasta, and the headers in the fasta file contain sampling times in days since infection, in the fourth field separated by "_", e.g., >ID01_samp1_xx_1030_clone**
+    - **Any deviations from this can be edited within "generate_xml.sh"**
     
-    Run scipt "code/generate.sh" **from the root directory**, which takes each input fasta file, and creates a custom .xml for the analysis.
+    Run scipt "code/generate_xml_.sh" **from the root directory**, which takes each input fasta file, and creates a custom .xml for the analysis.
 
-    `code/generate.sh`
+    `code/generate_xml.sh`
 
 2. Run BEAST
 
     - Input: .xml file instructing BEAST how to build trees from the sequences
 
-    /data/XMLs/[file].AbsRate.xml
+    /data/XMLs/[file]_AbsRate.xml
 
     - Output: .log, .trees, and .dNdS.log files from BEAST run
 
@@ -101,7 +107,7 @@ Programs and versions needed to run the pipeline are included in environment.yml
 
 4. Plot results
 
-    If desired, example output is displayed in "documentation/PlotAbsoluteDivergence.qmd". Adjust the path to the root directory before rendering.
+    If desired, example output is displayed in "documentation/PlotAbsoluteDivergence.qmd".
     
     Open and render file in RStudio or other IDE of preference:
     `documentation/PlotAbsoluteDivergence.qmd`
