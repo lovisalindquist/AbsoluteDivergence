@@ -19,6 +19,13 @@ AbsoluteDivergence/
     config.yml
     bin/
     	beastgen.jar
+    	BEASTv1.10.4/
+    		bin/
+    			beast
+    		doc/
+    		examples/
+    		lib/
+    		native/
     code/
         BayesianDivergencePlotter.jar
         generate_xml.sh
@@ -40,7 +47,7 @@ AbsoluteDivergence/
 Programs and versions needed to run the pipeline are included in environment.yml (for AbsDiv_env)
 
 - BEASTGen v0.3 (not available in environment, available at the BEAST GitHub page, must be in bin folder)
-- BEAST v1.10.4 (BEAST 10.5.0 not available in environment, available at the BEAST GitHub page, must be in bin folder)
+- BEAST v1.10.4 
     - logcombiner v1.10.4
 - Snakemake v9.19.0
 - r-base
@@ -48,6 +55,8 @@ Programs and versions needed to run the pipeline are included in environment.yml
 
 To activate environment:
 	`conda env create --file /env/environment.yml -n AbsDiv_env`
+
+	**NB! Due to issues with different operating systems, download BEASTv1.10.4 from the BEAST GitHub page in case of errors while running run_beast.xml** 
 
 # Process:
 1. Generate .XML files
