@@ -79,6 +79,7 @@ median_abs_data %>%
   geom_point(position=position_dodge(width=0.9)) + 
   theme_test() +
   labs(x = "", y = "Median divergence rate (subst./site/time unit)") +
+  scale_fill_discrete(labels = c("All", "Internal")) +
   theme(text=element_text(face="bold", size=12))
 
 ```
@@ -94,6 +95,7 @@ median_abs_data %>%
   geom_density_ridges(alpha=0.5) +
   theme_test() +
   labs(y = "", x = "Median divergence rate (subst./site/time unit)") +
+  scale_fill_discrete(labels = c("All", "Internal")) +
   theme(text=element_text(face="bold", size=12))
 
 ```
@@ -110,6 +112,8 @@ time_divergence_data %>%
   ggplot(aes(x=RealTime, y = as.numeric(Divergence), col=interaction(Branches, Type), group=interaction(Branches, Type))) + 
   geom_line() +
   facet_wrap(~ID, scales="free") +
+  scale_color_discrete("Branches, Type", labels = c("All, E[N]", "Internal, E[N]", "All, E[S]", "Internal, E[S]")) +
+  labs(x = "Time", y = "Median divergence rate") +
   theme_test()
 
 ```
