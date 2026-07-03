@@ -8,6 +8,7 @@ editor: visual
 ```{r}
 #| echo: false
 #| message: false
+#| warning: false
 
 # install and load packages
 library(tibble)
@@ -23,6 +24,8 @@ library(ggridges)
 ```{r}
 #| echo: false
 #| message: false
+#| warning: false
+
 
 # read input files with divergence at given times
 rate_file_list = list.files("../results/BEAST/", pattern = "*div_[allint]{3}.txt", recursive = T, full.names = T)
@@ -32,6 +35,8 @@ rate_file_list = list.files("../results/BEAST/", pattern = "*div_[allint]{3}.txt
 ```{r}
 #| echo: false
 #| message: false
+#| warning: false
+
 
 median_abs_data = tibble(ID = c(NA), Type=c(NA), Branches=c(NA), Median=c(NA))
 time_divergence_data = tibble(ID = c(NA), Type=c(NA), Branches=c(NA), Time=c(NA), Divergence=c(NA))
@@ -69,6 +74,8 @@ for (file in rate_file_list) {
 ```{r}
 #| echo: false
 #| message: false
+#| warning: false
+
 
 # plot differences between internal and external branches for each type and participant
 median_abs_data %>% 
@@ -87,6 +94,8 @@ median_abs_data %>%
 ```{r}
 #| echo: false
 #| message: false
+#| warning: false
+
 
 # plot density plots of divergence rates for identification of groups/clusters
 median_abs_data %>% 
@@ -103,6 +112,8 @@ median_abs_data %>%
 ```{r}
 #| echo: false
 #| message: false
+#| warning: false
+
 
 # plot trajectories of divergence over time for all and internal branches, EN and ES rates
 time_divergence_data %>% 
