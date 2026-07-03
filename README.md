@@ -1,5 +1,8 @@
 # Estimator of absolute synonymous and nonsynonymous divergence rates from phylogenetic trees for applications in within-host virus evolution 
 
+- Author: Lovisa Lindquist, lovisa.lindquist@med.lu.se
+- Date: 2026-07-03
+
 # Project Description: 
 The overall aim of this project is to create .xml files for running BEAST to reconstruct phylogenies, combine the trees, extract a subset of the trees and extract the synonymous and nonsynonyomus divergence at given time stamps.
 
