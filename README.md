@@ -10,7 +10,7 @@ The overall aim of this project is to create .xml files for running BEAST to rec
 4. Plot results
     
 # Input files
-aligned .fasta file
+aligned .fasta file **aligned as codons, the length of sequences must thus be divisible by 3**
 
 # File tree
 AbsoluteDivergence/
@@ -57,7 +57,8 @@ To activate environment:
 	`conda env create --file /env/environment.yml -n AbsDiv_env`
 
 	**NB! Due to issues with different operating systems, download BEASTv1.10.4 from the BEAST GitHub page in case of errors while running run_beast.xml** 
-
+	** if so, switch beast command within run_beast.sh **
+	
 # Process:
 1. Generate .XML files
 
@@ -70,7 +71,7 @@ To activate environment:
     
     /data/XMLs/[file].AbsRate.xml
 
-    - **Assumptions: the fasta file is named [ID].fasta, and the headers in the fasta file contain sampling times in days since infection, in the fourth field separated by "_", e.g., >ID01_samp1_xx_1030_clone**
+    - **Assumptions: the fasta file is named [ID].fasta, and the headers in the fasta file contain sampling times in days since infection, in the third field separated by "_", e.g., >ID01_samp1_1030_clone**
     - **Any deviations from this can be edited within "generate_xml.sh"**
     
     Run scipt "code/generate_xml_.sh" **from the root directory**, which takes each input fasta file, and creates a custom .xml for the analysis.
